@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
-const User = require("./User");
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../config/database.js'
+import { User } from './User.js'
 
-const Expense = sequelize.define("Expense", {
+const Expense = sequelize.define('Expense', {
 	id: {
 		type: DataTypes.INTEGER,
 		autoIncrement: true,
@@ -27,7 +27,7 @@ const Expense = sequelize.define("Expense", {
 	timestamps: true,
 });
 
-User.hasMany(Expense, { foreignKey: "userId", onDelete: "CASCADE" });
-Expense.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Expense, { foreignKey: 'userId', onDelete: 'CASCADE' });
+Expense.belongsTo(User, { foreignKey: 'userId' });
 
-module.exports = Expense;
+export { Expense };
