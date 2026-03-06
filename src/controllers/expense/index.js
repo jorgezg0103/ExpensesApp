@@ -19,18 +19,28 @@ export const getExpenses = async (req, res) => {
 
 export const getMonthlySummary = async (req, res) => {
 	try {
-		const replacements = { userId: req.userId }
-		const summary = await sequelize.query(`
+		const { startDate, endDate } = req.query;
+		const today = new Date();
+		const firstMonthOfYear = new Date(today.getFullYear(), 0, 1);
+
+		const query = `
 			SELECT
 				date_trunc('month', date) AS "month",
 				SUM(amount) AS "total"
 			FROM public."Expenses"
-			WHERE "userId" = :userId
+			WHERE "userId" = :userId AND date BETWEEN :startDate AND :endDate
 			GROUP BY "month"
 			ORDER BY "month" DESC
-		`, { replacements, type: QueryTypes.SELECT });
+		`;
+		const replacements = {
+			userId: req.userId,
+			startDate: startDate ?? firstMonthOfYear.toISOString(),
+			endDate: endDate ?? today.toISOString()
+		}
+
+		const summary = await sequelize.query(query, { replacements, type: QueryTypes.SELECT });
 		res.json(summary);
-	} catch {
+	} catch (error) {
 		res.status(500).json({ message: 'Error getting monthly summary' });
 	}
 };
