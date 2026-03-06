@@ -19,20 +19,55 @@ export const getExpenses = async (req, res) => {
 
 export const getMonthlySummary = async (req, res) => {
 	try {
+		const replacements = { userId: req.userId }
 		const summary = await sequelize.query(`
 			SELECT
 				date_trunc('month', date) AS "month",
 				SUM(amount) AS "total"
 			FROM public."Expenses"
-			WHERE "userId" = '1'
+			WHERE "userId" = :userId
 			GROUP BY "month"
 			ORDER BY "month" DESC
-		`, { type: QueryTypes.SELECT });
+		`, { replacements, type: QueryTypes.SELECT });
 		res.json(summary);
 	} catch {
 		res.status(500).json({ message: 'Error getting monthly summary' });
 	}
 };
+
+export const getCategorySummary = async (req, res) => {
+	try {
+		const { startDate, endDate } = req.query;
+		const today = new Date();
+		const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+		let query = `
+			SELECT
+				category,
+				SUM(amount) AS "total"
+			FROM public."Expenses"
+			WHERE "userId" = :userId
+		`;
+
+		const replacements = {
+			userId: req.userId
+		};
+
+		query += ` AND date BETWEEN :startDate AND :endDate`;
+		replacements.startDate = startDate ?? firstDayOfMonth.toISOString();
+		replacements.endDate = endDate ?? today.toISOString();
+
+		query += `
+			GROUP BY category
+			ORDER BY "total" DESC
+		`;
+
+		const summary = await sequelize.query(query, { replacements, type: QueryTypes.SELECT });
+		res.json(summary);
+	} catch {
+		res.status(500).json({ message: 'Error getting category summary' });
+	}
+}
 
 export const createExpense = async (req, res) => {
 	try {
