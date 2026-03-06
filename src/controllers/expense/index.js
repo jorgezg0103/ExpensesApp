@@ -41,26 +41,20 @@ export const getCategorySummary = async (req, res) => {
 		const today = new Date();
 		const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-		let query = `
+		const query = `
 			SELECT
 				category,
 				SUM(amount) AS "total"
 			FROM public."Expenses"
-			WHERE "userId" = :userId
-		`;
-
-		const replacements = {
-			userId: req.userId
-		};
-
-		query += ` AND date BETWEEN :startDate AND :endDate`;
-		replacements.startDate = startDate ?? firstDayOfMonth.toISOString();
-		replacements.endDate = endDate ?? today.toISOString();
-
-		query += `
+			WHERE "userId" = :userId AND date BETWEEN :startDate AND :endDate
 			GROUP BY category
 			ORDER BY "total" DESC
 		`;
+		const replacements = {
+			userId: req.userId,
+			startDate: startDate ?? firstDayOfMonth.toISOString(),
+			endDate: endDate ?? today.toISOString()
+		};
 
 		const summary = await sequelize.query(query, { replacements, type: QueryTypes.SELECT });
 		res.json(summary);
