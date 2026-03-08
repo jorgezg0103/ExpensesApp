@@ -21,12 +21,17 @@ function Dashboard() {
 		setExpenses((previous) => [expense, ...previous]);
 	}
 
+	const handleDeleteExpense = async (id) => {
+		await api.delete(`/expenses/${id}`);
+		setExpenses((previous) => previous.filter(e => e.id !== id));
+	}
+
 	return (
 		<Container>
 
 			<CreateExpenseForm onExpenseCreated={handleExpenseCreated}></CreateExpenseForm>
 
-			<CreateExpenseTable expenses={expenses}></CreateExpenseTable>
+			<CreateExpenseTable expenses={expenses} onDelete={handleDeleteExpense}></CreateExpenseTable>
 
 		</Container>
 	);
