@@ -1,14 +1,17 @@
+import { useState } from 'react'
+import Login from './pages/login'
 import Dashboard from './pages/dashboard'
 
 function App() {
-
-	return (
-		<div>
-			<h1>Expenses App</h1>
-			<Dashboard />
-		</div>
-
+	const [isAuthenticated, setIsAuthenticated] = useState(
+		!!localStorage.getItem('token')
 	)
+
+	if (!isAuthenticated) {
+		return <Login onLogin={() => setIsAuthenticated(true)} />
+	}
+
+	return <Dashboard />
 }
 
 export default App;
