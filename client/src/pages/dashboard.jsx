@@ -1,23 +1,30 @@
 import { useEffect, useState } from 'react'
 import api from '../api/index'
+import CreateExpenseForm from '../components/expenseForm';
 
 function Dashboard() {
 
 	const [expenses, setExpenses] = useState([])
 
 	useEffect(() => {
-		const fetchExpenses = async () => {
-			const response = await api.get('/expenses')
-			setExpenses(response.data)
-		}
-
 		fetchExpenses()
-	}, [])
+	}, []);
+
+	const fetchExpenses = async () => {
+		const response = await api.get('/expenses');
+		setExpenses(response.data);
+	}
+
+	const handleExpenseCreated = (expense) => {
+		setExpenses((previous) => [expense, ...previous]);
+	}
 
 	return (
 		<div>
-			<h2>Your Expenses</h2>
 
+			<CreateExpenseForm onExpenseCreated={handleExpenseCreated}></CreateExpenseForm>
+
+			<h2>Your Expenses</h2>
 			<ul>
 				{expenses.map(expense => (
 					<li key={expense.id}>
@@ -27,7 +34,7 @@ function Dashboard() {
 			</ul>
 
 		</div>
-	)
+	);
 }
 
 export default Dashboard;
