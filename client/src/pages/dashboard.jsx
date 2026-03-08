@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import api from '../api/index'
 import CreateExpenseForm from '../components/expenseForm';
-import { Container, Typography } from '@mui/material'
+import CreateExpenseTable from '../components/expenseTable';
+import { Container } from '@mui/material'
 
 function Dashboard() {
 
@@ -25,14 +26,7 @@ function Dashboard() {
 
 			<CreateExpenseForm onExpenseCreated={handleExpenseCreated}></CreateExpenseForm>
 
-			<Typography variant='h4' sx={{ mb: 4 }}> Your Expenses </Typography>
-			<ul>
-				{expenses.map(expense => (
-					<li key={expense.id}>
-						{expense.description} - {expense.category} - {expense.date} - {expense.amount}€
-					</li>
-				))}
-			</ul>
+			<CreateExpenseTable expenses={expenses}></CreateExpenseTable>
 
 		</Container>
 	);
