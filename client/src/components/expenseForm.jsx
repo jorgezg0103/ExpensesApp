@@ -1,5 +1,12 @@
 import { useState } from 'react'
 import api from '../api/index'
+import {
+	Box,
+	TextField,
+	Button,
+	Typography,
+	Paper
+} from '@mui/material'
 
 function CreateExpenseForm({ onExpenseCreated }) {
 	const [amount, setAmount] = useState('');
@@ -28,41 +35,58 @@ function CreateExpenseForm({ onExpenseCreated }) {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<h3>Add Expense</h3>
+		<Paper sx={{ p: 3, mb: 4 }}>
+			<Typography variant='h6'>
+				Add Expense
+			</Typography>
+			<Box
+				component='form'
+				onSubmit={handleSubmit}
+				sx={{
+					display: 'flex',
+					gap: 2,
+					flexWrap: 'wrap'
+				}}
+			>
 
-			<input
-				type="number"
-				placeholder="Amount"
-				value={amount}
-				onChange={(e) => setAmount(e.target.value)}
-				required
-			/>
+				<TextField
+					label='Amount'
+					value={amount}
+					onChange={(e) => setAmount(e.target.value)}
+					required
+				/>
 
-			<input
-				type="text"
-				placeholder="Category"
-				value={category}
-				onChange={(e) => setCategory(e.target.value)}
-				required
-			/>
+				<TextField
+					label='Category'
+					value={category}
+					onChange={(e) => setCategory(e.target.value)}
+					required
+				/>
 
-			<input
-				type="text"
-				placeholder="Description"
-				value={description}
-				onChange={(e) => setDescription(e.target.value)}
-			/>
+				<TextField
+					label='Description'
+					value={description}
+					onChange={(e) => setDescription(e.target.value)}
+				/>
 
-			<input
-				type="date"
-				value={date}
-				onChange={(e) => setDate(e.target.value)}
-				required
-			/>
+				<TextField
+					label='Date'
+					type='date'
+					slotProps={{ inputLabel: { shrink: true } }}
+					value={date}
+					onChange={(e) => setDate(e.target.value)}
+					required
+				/>
 
-			<button type="submit">Add</button>
-		</form>
+				<Button
+					type='submit'
+					variant='contained'
+				>
+					Add expense
+				</Button>
+
+			</Box>
+		</Paper>
 	);
 }
 
