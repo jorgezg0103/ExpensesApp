@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
 	Paper,
 	Table,
@@ -10,8 +11,27 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import ConfirmDialog from './confirmDialog';
 
 function CreateExpenseTable({ expenses, onDelete }) {
+
+	const [openDialog, setOpenDialog] = useState(false)
+	const [selectedId, setSelectedId] = useState(null)
+
+	const handleDeleteClick = (id) => {
+		setSelectedId(id);
+		setOpenDialog(true);
+	}
+
+	const confirmDelete = () => {
+		onDelete(selectedId);
+		setOpenDialog(false);
+	}
+
+	const handleClose = () => {
+		setOpenDialog(false);
+	}
+
 	return (
 		<Paper sx={{ p: 3, mb: 4 }}>
 			<Typography variant='h4' sx={{ mb: 4 }}> Your Expenses </Typography>
@@ -35,8 +55,8 @@ function CreateExpenseTable({ expenses, onDelete }) {
 								<TableCell align='right'> {expense.amount} €</TableCell>
 								<TableCell align="center">
 									<IconButton
-										color="error"
-										onClick={() => onDelete(expense.id)}
+										color="info"
+										onClick={() => handleDeleteClick(expense.id)}
 									>
 										<DeleteIcon />
 									</IconButton>
@@ -46,6 +66,14 @@ function CreateExpenseTable({ expenses, onDelete }) {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			<ConfirmDialog
+				open={openDialog}
+				title={"Delete expense"}
+				message={"Are you sure you want to delete this expense?"}
+				onConfirm={confirmDelete}
+				onCancel={handleClose}
+			>
+			</ConfirmDialog>
 		</Paper>
 	);
 }
