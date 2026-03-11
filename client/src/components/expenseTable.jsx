@@ -10,10 +10,11 @@ import {
 	Typography,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton';
 import ConfirmDialog from './confirmDialog';
 
-function CreateExpenseTable({ expenses, onDelete }) {
+function CreateExpenseTable({ expenses, onDelete, onEdit }) {
 
 	const [openDialog, setOpenDialog] = useState(false)
 	const [selectedId, setSelectedId] = useState(null)
@@ -54,6 +55,12 @@ function CreateExpenseTable({ expenses, onDelete }) {
 								<TableCell> {expense.date} </TableCell>
 								<TableCell align='right'> {expense.amount} €</TableCell>
 								<TableCell align="center">
+									<IconButton
+										color="primary"
+										onClick={() => onEdit(expense)}
+									>
+										<EditIcon />
+									</IconButton>
 									<IconButton
 										color="info"
 										onClick={() => handleDeleteClick(expense.id)}
