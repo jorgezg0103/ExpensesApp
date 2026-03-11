@@ -52,7 +52,7 @@ function CreateExpenseTable({ expenses, onDelete, onEdit }) {
 							<TableRow key={expense.id}>
 								<TableCell> {expense.description} </TableCell>
 								<TableCell> {expense.category}</TableCell>
-								<TableCell> {expense.date} </TableCell>
+								<TableCell> {new Date(expense.date).toLocaleDateString()} </TableCell>
 								<TableCell align='right'> {expense.amount} €</TableCell>
 								<TableCell align="center">
 									<IconButton

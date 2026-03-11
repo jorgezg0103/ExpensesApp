@@ -21,7 +21,8 @@ function EditExpenseDialog({ open, expense, onClose, onUpdate }) {
 			setAmount(expense.amount);
 			setCategory(expense.category);
 			setDescription(expense.description);
-			setDate(expense.date);
+			const formattedDate = expense.date.split('T')[0]
+			setDate(formattedDate);
 		}
 	}, [expense]);
 
