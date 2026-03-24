@@ -36,7 +36,7 @@ function CreateExpenseForm({ onExpenseCreated }) {
 
 	return (
 		<Paper sx={{ p: 3, mb: 4 }}>
-			<Typography variant='h6'>
+			<Typography variant='h4'>
 				Add Expense
 			</Typography>
 			<Box

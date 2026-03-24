@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import api from '../api/index'
+import CategoryChart from '../components/categoryChart';
 import CreateExpenseForm from '../components/expenseForm';
 import CreateExpenseTable from '../components/expenseTable';
 import { Container } from '@mui/material'
@@ -49,6 +50,8 @@ function Dashboard() {
 		<Container>
 
 			<CreateExpenseForm onExpenseCreated={handleExpenseCreated}></CreateExpenseForm>
+
+			<CategoryChart />
 
 			<CreateExpenseTable expenses={expenses} onDelete={handleDeleteExpense} onEdit={handleEditExpense}></CreateExpenseTable>
 
