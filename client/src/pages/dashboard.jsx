@@ -3,7 +3,7 @@ import api from '../api/index'
 import CategoryChart from '../components/categoryChart';
 import CreateExpenseForm from '../components/expenseForm';
 import CreateExpenseTable from '../components/expenseTable';
-import { Container } from '@mui/material'
+import { Box, Container, Grid } from '@mui/material';
 import EditExpenseDialog from '../components/editExpenseDialog';
 
 function Dashboard() {
@@ -47,13 +47,27 @@ function Dashboard() {
 	}
 
 	return (
-		<Container>
+		<>
+			<Grid>
 
-			<CreateExpenseForm onExpenseCreated={handleExpenseCreated}></CreateExpenseForm>
+				<Grid size={12}>
+					<CreateExpenseForm onExpenseCreated={handleExpenseCreated}></CreateExpenseForm>
+				</Grid>
 
-			<CategoryChart />
+				<Grid container spacing={2}>
+					<Grid size={6}>
+						<CategoryChart />
+					</Grid>
+					<Grid size={6}>
+						<CategoryChart />
+					</Grid>
+				</Grid>
 
-			<CreateExpenseTable expenses={expenses} onDelete={handleDeleteExpense} onEdit={handleEditExpense}></CreateExpenseTable>
+				<Grid>
+					<CreateExpenseTable expenses={expenses} onDelete={handleDeleteExpense} onEdit={handleEditExpense}></CreateExpenseTable>
+				</Grid>
+
+			</Grid>
 
 			<EditExpenseDialog
 				open={!!editingExpense}
@@ -61,7 +75,7 @@ function Dashboard() {
 				onClose={() => setEditingExpense(null)}
 				onUpdate={handleUpdateExpense}
 			/>
-		</Container>
+		</>
 	);
 }
 
