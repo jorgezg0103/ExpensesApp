@@ -4,7 +4,6 @@ import { TextField, Button, Box } from '@mui/material'
 import {
 	PieChart,
 	Pie,
-	Cell,
 	Tooltip,
 	Legend,
 	ResponsiveContainer
@@ -23,9 +22,24 @@ const COLORS = [
 
 function CategoryChart() {
 
+	const getThisMonthRange = () => {
+		const now = new Date();
+
+		const startDate = new Date(
+			now.getFullYear(),
+			now.getMonth(),
+			1
+		).toISOString().split('T')[0];
+
+		const endDate = new Date().toISOString().split('T')[0];
+
+		return { startDate, endDate };
+	}
+
 	const [data, setData] = useState([]);
-	const [startDate, setStartDate] = useState('')
-	const [endDate, setEndDate] = useState('')
+	const initialRange = getThisMonthRange();
+	const [startDate, setStartDate] = useState(initialRange.startDate);
+	const [endDate, setEndDate] = useState(initialRange.endDate);
 
 	useEffect(() => {
 		fetchSummary();
@@ -59,18 +73,9 @@ function CategoryChart() {
 	}
 
 	const setThisMonth = () => {
-		const now = new Date();
-
-		const start = new Date(
-			now.getFullYear(),
-			now.getMonth(),
-			1
-		);
-
-		const end = new Date();
-
-		setStartDate(start.toISOString().split('T')[0]);
-		setEndDate(end.toISOString().split('T')[0]);
+		const { startDate, endDate } = getThisMonthRange();
+		setStartDate(startDate);
+		setEndDate(endDate);
 	}
 
 	const setLastMonth = () => {
