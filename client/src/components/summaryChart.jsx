@@ -8,7 +8,6 @@ import {
 	Pie,
 	Tooltip,
 	Legend,
-	ResponsiveContainer,
 	XAxis,
 	YAxis,
 } from 'recharts'
@@ -156,7 +155,7 @@ function CategoryChart(props) {
 
 			</Box>
 			{props.chartType === 'pie' &&
-				<Box>
+				<>
 					<Button variant='outlined' sx={{ m: 1 }} onClick={setToday}>
 						Today
 					</Button>
@@ -166,31 +165,32 @@ function CategoryChart(props) {
 					<Button variant='outlined' sx={{ m: 1 }} onClick={setLastMonth}>
 						Last month
 					</Button>
-				</Box>
+
+					<Box sx={{ display: 'flex', justifyContent: 'center' }}>
+						<PieChart width={300} height={300}>
+							<Pie
+								data={parsedData}
+								dataKey="total"
+								nameKey="category"
+								outerRadius={100}
+								label
+							/>
+							<Tooltip />
+							<Legend />
+						</PieChart>
+					</Box>
+				</>
 			}
-			<ResponsiveContainer width="100%" height={300}>
-				{props.chartType === 'pie' &&
-					<PieChart>
-						<Pie
-							data={parsedData}
-							dataKey="total"
-							nameKey="category"
-							outerRadius={100}
-							label
-						/>
-						<Tooltip />
-						<Legend />
-					</PieChart>
-				}
-				{props.chartType === 'bar' &&
-					<BarChart data={parsedData.reverse()}>
+			{props.chartType === 'bar' &&
+				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
+					<BarChart width={400} height={300} data={parsedData.reverse()}>
 						<XAxis dataKey="month" />
 						<YAxis dataKey="total" />
 						<Tooltip />
 						<Bar dataKey="total" />
 					</BarChart>
-				}
-			</ResponsiveContainer>
+				</Box>
+			}
 
 		</Paper>
 	);

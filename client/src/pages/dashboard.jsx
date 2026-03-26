@@ -3,7 +3,7 @@ import api from '../api/index'
 import SummaryChart from '../components/summaryChart';
 import CreateExpenseForm from '../components/expenseForm';
 import CreateExpenseTable from '../components/expenseTable';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import EditExpenseDialog from '../components/editExpenseDialog';
 
 function Dashboard() {
@@ -49,6 +49,10 @@ function Dashboard() {
 	return (
 		<>
 			<Grid>
+
+				<Grid size={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
+					<Typography variant='h1'> Expenses App</Typography>
+				</Grid>
 
 				<Grid size={12}>
 					<CreateExpenseForm onExpenseCreated={handleExpenseCreated}></CreateExpenseForm>

@@ -34,7 +34,7 @@ function CreateExpenseTable({ expenses, onDelete, onEdit }) {
 	}
 
 	return (
-		<Paper sx={{ p: 3, mb: 4 }}>
+		<Paper sx={{ p: 3, mb: 3 }}>
 			<Typography variant='h4' sx={{ mb: 4 }}> Your Expenses </Typography>
 			<TableContainer>
 				<Table>
