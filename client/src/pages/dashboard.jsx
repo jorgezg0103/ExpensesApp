@@ -56,10 +56,10 @@ function Dashboard() {
 
 				<Grid container spacing={2}>
 					<Grid size={6}>
-						<CategoryChart />
+						<CategoryChart title='Expenses by Category' endpoint='/expenses/summary/category' chartType='pie' />
 					</Grid>
 					<Grid size={6}>
-						<CategoryChart />
+						<CategoryChart title='Expenses by Month' endpoint='/expenses/summary/month' chartType='bar' />
 					</Grid>
 				</Grid>
 

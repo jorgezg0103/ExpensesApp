@@ -2,11 +2,15 @@ import { useEffect, useState } from 'react';
 import api from '../api/index';
 import { TextField, Button, Box } from '@mui/material'
 import {
+	BarChart,
+	Bar,
 	PieChart,
 	Pie,
 	Tooltip,
 	Legend,
-	ResponsiveContainer
+	ResponsiveContainer,
+	XAxis,
+	YAxis,
 } from 'recharts'
 
 import { Paper, Typography } from '@mui/material'
@@ -20,7 +24,7 @@ const COLORS = [
 	'#FF4444'
 ];
 
-function CategoryChart() {
+function CategoryChart(props) {
 
 	const getThisMonthRange = () => {
 		const now = new Date();
@@ -36,10 +40,30 @@ function CategoryChart() {
 		return { startDate, endDate };
 	}
 
+	const getSixMonthRange = () => {
+		const now = new Date();
+
+		const startDate = new Date(
+			now.getFullYear(),
+			now.getMonth() - 5,
+			1
+		).toISOString().split('T')[0];
+
+		const endDate = new Date().toISOString().split('T')[0];
+
+		return { startDate, endDate };
+	}
+
+	const pieInitialRange = getThisMonthRange();
+	const barInitialRange = getSixMonthRange();
+
 	const [data, setData] = useState([]);
-	const initialRange = getThisMonthRange();
-	const [startDate, setStartDate] = useState(initialRange.startDate);
-	const [endDate, setEndDate] = useState(initialRange.endDate);
+	const [startDate, setStartDate] = useState(
+		props.chartType === 'pie' ? pieInitialRange.startDate : barInitialRange.startDate
+	);
+	const [endDate, setEndDate] = useState(
+		props.chartType === 'pie' ? pieInitialRange.endDate : barInitialRange.endDate
+	);
 
 	useEffect(() => {
 		fetchSummary();
@@ -54,16 +78,17 @@ function CategoryChart() {
 		}
 
 		const res = await api.get(
-			'/expenses/summary/category',
+			props.endpoint,
 			{ params }
 		);
 
 		setData(res.data);
 	}
 
-	const coloredData = data.map((item, index) => ({
+	const parsedData = data.map((item, index) => ({
 		...item,
-		fill: COLORS[index % COLORS.length]
+		fill: COLORS[index % COLORS.length],
+		...(item.month && { month: `${item.month.split('-')[0]}-${item.month.split('-')[1]}` })
 	}));
 
 	const setToday = () => {
@@ -91,10 +116,10 @@ function CategoryChart() {
 	}
 
 	return (
-		<Paper sx={{ p: 3, mb: 4 }}>
+		<Paper sx={{ p: 3, mb: 4, minHeight: 500 }}>
 
-			<Typography variant="h4" sx={{ mb: 2 }}>
-				Expenses by Category
+			<Typography variant="h4" sx={{ mb: 3 }}>
+				{props.title}
 			</Typography>
 
 			<Box
@@ -130,28 +155,41 @@ function CategoryChart() {
 				</Button>
 
 			</Box>
-			<Button onClick={setToday}>
-				Today
-			</Button>
-			<Button onClick={setThisMonth}>
-				This month
-			</Button>
-			<Button onClick={setLastMonth}>
-				Last month
-			</Button>
-
+			{props.chartType === 'pie' &&
+				<Box>
+					<Button variant='outlined' sx={{ m: 1 }} onClick={setToday}>
+						Today
+					</Button>
+					<Button variant='outlined' sx={{ m: 1 }} onClick={setThisMonth}>
+						This month
+					</Button>
+					<Button variant='outlined' sx={{ m: 1 }} onClick={setLastMonth}>
+						Last month
+					</Button>
+				</Box>
+			}
 			<ResponsiveContainer width="100%" height={300}>
-				<PieChart>
-					<Pie
-						data={coloredData}
-						dataKey="total"
-						nameKey="category"
-						outerRadius={100}
-						label
-					/>
-					<Tooltip />
-					<Legend />
-				</PieChart>
+				{props.chartType === 'pie' &&
+					<PieChart>
+						<Pie
+							data={parsedData}
+							dataKey="total"
+							nameKey="category"
+							outerRadius={100}
+							label
+						/>
+						<Tooltip />
+						<Legend />
+					</PieChart>
+				}
+				{props.chartType === 'bar' &&
+					<BarChart data={parsedData.reverse()}>
+						<XAxis dataKey="month" />
+						<YAxis dataKey="total" />
+						<Tooltip />
+						<Bar dataKey="total" />
+					</BarChart>
+				}
 			</ResponsiveContainer>
 
 		</Paper>
